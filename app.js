@@ -21,9 +21,6 @@ const seedDatabase = require("./utils/seedDatabase");
 // Our database instance;
 const db = require("./database");
 
-// Our apiRouter
-const apiRouter = require("./routes/index");
-
 // A helper function to sync our database;
 const syncDatabase = () => {
   if (process.env.NODE_ENV === "production") {
@@ -50,10 +47,14 @@ const app = express();
 const configureApp = () => {
   app.use(helmet());
   app.use(logger("dev"));
+  // handle request data:
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(compression());
   app.use(cookieParser());
+
+  // Our apiRouter
+  const apiRouter = require("./routes/index");
 
   // Mount our apiRouter
   app.use("/api", apiRouter);
@@ -79,7 +80,7 @@ const configureApp = () => {
 
 // Main function declaration;
 const bootApp = async () => {
-  // await syncDatabase();
+  await syncDatabase();
   await configureApp();
 };
 
